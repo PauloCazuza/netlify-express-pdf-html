@@ -36,10 +36,24 @@ router.get("/pdf", async function (req, res) {
 router.post("/", async function (req, res) {
   var { html } = req.body;
   html = Buffer.from(html, "base64").toString("ascii");
-  // console.log(html);
-  // console.log(html);
 
   await pdf.create(html, options).toFile("./uploads/report.pdf", () => {});
+
+  await setTimeout(
+    () =>
+      fs.readFile("./uploads/report.pdf", async function (err, data) {
+        res.contentType("application/pdf");
+        res.send(data);
+      }),
+    3000
+  );
+});
+
+router.post("/pdf", async function (req, res) {
+  var { html } = req.body;
+  html = Buffer.from(html, "base64").toString("ascii");
+
+  // await pdf.create(html, options).toFile("./uploads/report.pdf", () => {});
 
   await setTimeout(
     () =>
